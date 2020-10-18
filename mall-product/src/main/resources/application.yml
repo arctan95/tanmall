@@ -2,12 +2,17 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://192.168.1.252:3306/tanmall_pms
+    url: jdbc:mysql://10.199.6.49:3306/tanmall_pms
     driver-class-name: com.mysql.jdbc.Driver
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    alicloud:
+      access-key: LTAI4FyGwUbN2bsbuPCNm1Dr
+      secret-key: q0sE7PnXRqydS4tisyWKEXMHk3HYyH
+      oss:
+        endpoint: oss-cn-shanghai.aliyuncs.com
   application:
     name: mall-product
 mybatis-plus:
@@ -15,6 +20,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 
 server:
   port: 10000
