@@ -6,12 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 品牌分类关联
- * 
+ *
  * @author arctan95
  * @email tanzhq1995@gmail.com
  * @date 2020-10-10 09:45:58
  */
 @Mapper
 public interface CategoryBrandRelationDao extends BaseMapper<CategoryBrandRelationEntity> {
-	
+
 }

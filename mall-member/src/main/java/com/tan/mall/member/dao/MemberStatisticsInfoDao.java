@@ -6,12 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 会员统计信息
- * 
+ *
  * @author arctan95
  * @email tanzhq1995@gmail.com
  * @date 2020-10-10 22:34:32
  */
 @Mapper
 public interface MemberStatisticsInfoDao extends BaseMapper<MemberStatisticsInfoEntity> {
-	
+
 }
