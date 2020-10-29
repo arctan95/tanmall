@@ -1,8 +1,11 @@
 package com.tan.mall.product.service.impl;
 
+import com.tan.mall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,6 +19,7 @@ import com.tan.common.utils.Query;
 import com.tan.mall.product.dao.CategoryDao;
 import com.tan.mall.product.entity.CategoryEntity;
 import com.tan.mall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("categoryService")
@@ -23,6 +27,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 //    @Autowired
 //    CategoryDao categoryDao;
+
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -52,6 +60,41 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         // TODO 检查当前删除的菜单是否被别的地方引用
         // 逻辑删除
         baseMapper.deleteBatchIds(asList);
+    }
+
+    //[2,25,225]
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> path = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId,path);
+        Collections.reverse(parentPath);
+        return (Long[]) parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    /**
+     * @description 级联更新所有关联的数据
+     * @author tan
+     * @date 2020/10/29 20:07
+     * @param category
+     * @return void
+     **/
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
+    }
+
+
+    //225,25,2
+    private List<Long> findParentPath(Long catelogId, List<Long> path) {
+        //1.收集当前节点id
+        path.add(catelogId);
+        CategoryEntity byId = this.getById(catelogId);
+        if (byId.getParentCid()!=0) {
+            findParentPath(byId.getParentCid(),path);
+        }
+        return path;
     }
 
     //递归查找所有菜单的子菜单
